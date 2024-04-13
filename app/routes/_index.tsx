@@ -14,6 +14,8 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
     return (
-        <h1 className="text-2xl">Alumnos UTM</h1>
+        <>
+            <h1 className="text-2xl">Alumnos UTM</h1>
+        </>
     )
 }
