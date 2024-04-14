@@ -3,7 +3,7 @@ import InformacionEstudiante from "~/components/InformacionEstudiante";
 export default function Inicio() {
 
 	return (
-		<main className="flex gap-8 px-6">
+		<main className="flex gap-8">
 			<InformacionEstudiante />
 
 			<section className="min-w-80">

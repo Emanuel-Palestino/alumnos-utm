@@ -7,7 +7,9 @@ export default function App() {
 	return (
 		<div className="w-full px-4 py-6">
 			<Navbar />
-			<Outlet />
+			<div className="px-6">
+				<Outlet />
+			</div>
 		</div>
 	)
 
