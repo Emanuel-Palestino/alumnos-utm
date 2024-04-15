@@ -1,4 +1,7 @@
 import type { MetaFunction } from "@remix-run/node"
+import { useState } from "react"
+import OjoIcon from "~/icons/Ojo"
+import OjoBloqueadoIcon from "~/icons/OjoBloqueado"
 
 
 export const meta: MetaFunction = () => {
@@ -13,6 +16,17 @@ export const meta: MetaFunction = () => {
 }
 
 export default function Index() {
+
+    const [showPassword, setShowPassword] = useState<boolean>(false)
+
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const data = new FormData(e.currentTarget)
+        console.log(data.get('matricula'))
+        console.log(data.get('contraseña'))
+        console.log(data.get('recordar'))
+    }
+
     return (
         <main className="container m-auto py-12 sm:px-0 px-3">
             <h1 className="text-3xl font-semibold text-center mb-10">Alumnos UTM</h1>
@@ -20,29 +34,53 @@ export default function Index() {
             <section className="rounded-xl bg-white px-8 sm:px-12 sm:py-6 py-4 w-full max-w-[480px] m-auto">
                 <h3 className="text-center text-lg mb-6 font-semibold">Iniciar Sesión</h3>
 
-                <form action="">
+                <form onSubmit={onSubmit}>
                     <div className="w-full flex flex-col gap-1 mb-4">
                         <label htmlFor="matricula">Matrícula:</label>
+
                         <input
                             id="matricula"
+                            name="matricula"
                             className="border border-gray-300 rounded-xl px-4 py-2 outline-gray-500"
                             type="number"
                             placeholder="2000010101"
+                            min="2000000000"
+                            max="3000000000"
                         />
                     </div>
 
-                    <div className="w-full flex flex-col gap-1 mb-4">
+                    <div className="relative w-full flex flex-col gap-1 mb-4">
                         <label htmlFor="contraseña">Contraseña:</label>
+                        
                         <input
                             id="contraseña"
-                            className="border border-gray-300 rounded-xl px-4 py-2 outline-gray-500"
-                            type="password"
+                            name="contraseña"
+                            className="border border-gray-300 rounded-xl px-4 py-2 pr-10 outline-gray-500"
+                            type={showPassword ? "text" : "password"}
                             placeholder="contraseña123"
                         />
+
+                        <button
+                            className="absolute right-4 top-9 p-1"
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {
+                                showPassword
+                                    ? <OjoBloqueadoIcon />
+                                    : <OjoIcon />
+                            }
+                        </button>
                     </div>
 
                     <div className="w-full flex gap-x-2 mb-4">
-                        <input type="checkbox" id="recordar" className="w-4" />
+                        <input
+                            type="checkbox"
+                            id="recordar"
+                            name="recordar"
+                            className="w-4"
+                        />
+
                         <label htmlFor="recordar">Recordar</label>
                     </div>
 
