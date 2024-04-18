@@ -2,6 +2,9 @@ import type { MetaFunction } from "@remix-run/node"
 import { useState } from "react"
 import OjoIcon from "~/icons/Ojo"
 import OjoBloqueadoIcon from "~/icons/OjoBloqueado"
+import { useLoaderData } from "@remix-run/react"
+import { json } from "@remix-run/node"
+import { axiosCliente } from "~/helpers/constants"
 
 
 export const meta: MetaFunction = () => {
@@ -15,16 +18,43 @@ export const meta: MetaFunction = () => {
     ]
 }
 
+export const loader = async () => {
+    const respuestaGet = await axiosCliente.get('/user_sessions/new')
+    const html = await respuestaGet.data
+    const regex = html.match(/authenticity_token" value="([^"]+)"/)
+    const token = regex?.length ? regex[1] : null
+
+    return json({ token })
+}
+
 export default function Index() {
+
+    const { token } = useLoaderData<typeof loader>()
 
     const [showPassword, setShowPassword] = useState<boolean>(false)
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const data = new FormData(e.currentTarget)
-        console.log(data.get('matricula'))
-        console.log(data.get('contraseña'))
-        console.log(data.get('recordar'))
+        const body = new URLSearchParams()
+        body.append('user_session[login]', data.get('matricula') as string)
+        body.append('user_session[password]', data.get('contraseña') as string)
+        body.append('authenticity_token', token as string)
+
+        const respuestaLogin = await fetch('https://alumnos.utm.mx/user_sessions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            credentials: 'include',
+            body
+        })
+
+        if (respuestaLogin.ok) {
+            console.log('Iniciaste sesión')
+        } else {
+            console.log('Error al iniciar sesión')
+        }
     }
 
     return (
@@ -51,7 +81,7 @@ export default function Index() {
 
                     <div className="relative w-full flex flex-col gap-1 mb-4">
                         <label htmlFor="contraseña">Contraseña:</label>
-                        
+
                         <input
                             id="contraseña"
                             name="contraseña"
