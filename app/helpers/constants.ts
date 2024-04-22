@@ -8,6 +8,5 @@ const cookieJar = new CookieJar()
 // Configura axios para almacenar y enviar cookies automáticamente
 export const axiosCliente = wrapper(axios.create({
 	withCredentials: true,
-	jar: cookieJar,
-	baseURL: 'https://alumnos.utm.mx'
+	jar: cookieJar
 }))
